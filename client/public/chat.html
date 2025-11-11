@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="chat" class="container">
+            <h2>Chat Online</h2>
+            <div id="roomList">
+                <button class="room-btn" data-room="general">General</button>
+                <button class="room-btn" data-room="work">Praca</button>
+                <button class="room-btn" data-room="random">Random</button>
+            </div>
+            <div id="currentRoom"></div>
+            <div id="messages"></div>
+            <div id="messageForm">
+                <div id="editorToolbar">
+                    <button type="button" id="boldBtn" title="Pogrubienie"><strong>B</strong></button>
+                    <button type="button" id="italicBtn" title="Kursywa"><em>I</em></button>
+                    <button type="button" id="underlineBtn" title="Podkreślenie"><u>U</u></button>
+                    <button type="button" id="clearBtn" title="Wyczyść formatowanie">⌫</button>
+                </div>
+                <div id="messageEditor" contenteditable="true" placeholder="Wpisz wiadomość..."></div>
+                <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.doc,.docx">
+                <button id="sendBtn">Wyślij</button>
+            </div>
+            <button id="leaveBtn">Opuść pokój</button>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>

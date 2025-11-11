@@ -66,7 +66,10 @@ Prosta aplikacja czatu w czasie rzeczywistym zbudowana z użyciem Node.js, TypeS
    npm start
    ```
 
-4. **Zaloguj się używając konta administratora:**
+4. **Otwórz stronę logowania:**
+   - http://localhost:3000/login.html
+
+5. **Zaloguj się używając konta administratora:**
    - admin / admin123
 
    Lub innych przykładowych kont (po uruchomieniu `create_admin.ts`):
@@ -86,14 +89,21 @@ Prosta aplikacja czatu w czasie rzeczywistym zbudowana z użyciem Node.js, TypeS
 chat_online/
 ├── server/
 │   ├── server.ts          # Główny plik serwera
+│   ├── create_admin.ts    # Skrypt tworzenia użytkownika admin
 │   └── uploads/           # Katalog na przesłane pliki
 ├── client/
 │   ├── public/
-│   │   ├── index.html     # Główna strona HTML
+│   │   ├── index.html     # Oryginalna strona (deprecated)
+│   │   ├── login.html     # Strona logowania
+│   │   ├── chat.html      # Strona czatu
 │   │   ├── style.css      # Style CSS
-│   │   └── app.js         # Skompilowany JavaScript klienta
+│   │   ├── login.js       # JavaScript strony logowania
+│   │   ├── chat.js        # JavaScript strony czatu
+│   │   └── app.js         # Oryginalny JavaScript (deprecated)
 │   └── src/
-│       └── app.ts         # Źródłowy plik TypeScript klienta
+│       ├── login.ts       # Kod TypeScript strony logowania
+│       ├── chat.ts        # Kod TypeScript strony czatu
+│       └── app.ts         # Oryginalny kod TypeScript (deprecated)
 ├── database_setup.sql     # Skrypt konfiguracji bazy danych
 ├── package.json
 ├── tsconfig.json
