@@ -4,12 +4,13 @@ const socket = io();
 let currentRoom: string | null = null;
 
 // Login functionality
-const loginBtn = document.getElementById('loginBtn') as any;
 const usernameInput = document.getElementById('username') as any;
 const passwordInput = document.getElementById('password') as any;
 const loginError = document.getElementById('loginError') as any;
 
-loginBtn.addEventListener('click', () => {
+const loginForm = document.getElementById('loginForm') as any;
+loginForm.addEventListener('submit', (e: any) => {
+    e.preventDefault();
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
