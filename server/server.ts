@@ -36,11 +36,18 @@ const upload = multer({ storage });
 app.use(express.json());
 
 // Middleware to check authentication for protected routes
-app.use('/chat.html', (_req: any, res: any, _next: any) => {
-  // For simplicity, we'll just redirect to login
-  // In a real app, you'd check JWT tokens or session cookies
-  console.log('Access to chat.html, redirecting to login');
-  res.redirect('/login.html');
+app.use('/chat.html', (req: any, res: any, next: any) => {
+  // Check if user is authenticated (has session/token)
+  // For now, we'll use a simple cookie-based approach
+  const isLoggedIn = req.headers.cookie && req.headers.cookie.includes('chat_session=authenticated');
+
+  if (isLoggedIn) {
+    console.log('User authenticated, allowing access to chat');
+    next();
+  } else {
+    console.log('User not authenticated, redirecting to login');
+    res.redirect('/login.html');
+  }
 });
 
 // Root route redirect
@@ -78,6 +85,13 @@ io.on('connection', (socket: any) => {
             (socket as any).username = username;
             console.log('Login successful for:', username);
             socket.emit('loginSuccess', { username, redirect: '/chat.html' });
+
+            // Set authentication cookie (simple approach)
+            // In a real app, you'd use secure session management
+            const response = socket.request.res;
+            if (response) {
+              response.setHeader('Set-Cookie', 'chat_session=authenticated; Path=/; HttpOnly');
+            }
           } else {
             console.log('Invalid password for:', username);
             socket.emit('loginError', 'Invalid credentials');
