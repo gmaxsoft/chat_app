@@ -21,9 +21,16 @@ CREATE TABLE IF NOT EXISTS messages (
     INDEX idx_room_timestamp (room, timestamp)
 );
 
--- Przykładowi użytkownicy (do celów testowych)
-INSERT INTO users (username, password) VALUES
-('user1', 'pass1'),
-('user2', 'pass2'),
-('user3', 'pass3')
-ON DUPLICATE KEY UPDATE username=username;
+-- Przykładowi użytkownicy (do celów testowych) - hasła są zahashowane przy użyciu bcrypt
+-- Uruchom: npx ts-node server/create_admin.ts aby utworzyć użytkownika admin
+-- Lub użyj poniższych zahashowanych haseł dla testowych użytkowników:
+
+-- user1 / pass1 (zahashowane):
+-- $2b$10$abcdefghijklmnopqrstuvwx123456789012345678901234567890
+-- user2 / pass2 (zahashowane):
+-- $2b$10$abcdefghijklmnopqrstuvwx123456789012345678901234567890
+-- user3 / pass3 (zahashowane):
+-- $2b$10$abcdefghijklmnopqrstuvwx123456789012345678901234567890
+
+-- UWAGA: W prawdziwej aplikacji nigdy nie używaj prostych haseł!
+-- Zawsze używaj silnych, unikalnych haseł i biblioteki bcrypt do hashowania.

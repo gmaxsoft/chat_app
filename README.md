@@ -49,7 +49,27 @@ Prosta aplikacja czatu w czasie rzeczywistym zbudowana z użyciem Node.js, TypeS
 
 ## Użycie
 
-1. Zaloguj się używając jednego z przykładowych kont:
+1. **Skonfiguruj bazę danych:**
+   ```bash
+   # Uruchom skrypt SQL na serwerze MySQL
+   mysql -u root -p < database_setup.sql
+   ```
+
+2. **Utwórz użytkownika administratora:**
+   ```bash
+   npx ts-node server/create_admin.ts
+   ```
+
+3. **Uruchom aplikację:**
+   ```bash
+   npm run build
+   npm start
+   ```
+
+4. **Zaloguj się używając konta administratora:**
+   - admin / admin123
+
+   Lub innych przykładowych kont (po uruchomieniu `create_admin.ts`):
    - user1 / pass1
    - user2 / pass2
    - user3 / pass3

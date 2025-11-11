@@ -4,6 +4,7 @@ import socketIo from 'socket.io';
 import mysql from 'mysql';
 import multer from 'multer';
 import path from 'path';
+import bcrypt from 'bcrypt';
 
 const app = express();
 const server = http.createServer(app);
@@ -43,13 +44,23 @@ io.on('connection', (socket: any) => {
   // Simple login
   socket.on('login', (data: any) => {
     const { username, password } = data;
-    // Simple authentication - in real app, hash passwords
-    const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
-    db.query(query, [username, password], (err: any, results: any) => {
+    // Authentication with password hashing
+    const query = 'SELECT * FROM users WHERE username = ?';
+    db.query(query, [username], async (err: any, results: any) => {
       if (err) return socket.emit('loginError', 'Database error');
       if (results.length > 0) {
-        (socket as any).username = username;
-        socket.emit('loginSuccess', { username });
+        const user = results[0];
+        try {
+          const isValidPassword = await bcrypt.compare(password, user.password);
+          if (isValidPassword) {
+            (socket as any).username = username;
+            socket.emit('loginSuccess', { username });
+          } else {
+            socket.emit('loginError', 'Invalid credentials');
+          }
+        } catch (hashErr) {
+          socket.emit('loginError', 'Authentication error');
+        }
       } else {
         socket.emit('loginError', 'Invalid credentials');
       }
