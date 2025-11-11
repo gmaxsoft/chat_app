@@ -80,6 +80,7 @@ io.on('connection', (socket: any) => {
 
   // Join room
   socket.on('joinRoom', (roomName: any) => {
+    console.log('User joining room:', roomName, 'username:', (socket as any).username);
     socket.join(roomName);
     socket.emit('joinedRoom', roomName);
     socket.to(roomName).emit('userJoined', (socket as any).username);
@@ -87,18 +88,27 @@ io.on('connection', (socket: any) => {
 
   // Leave room
   socket.on('leaveRoom', (roomName: any) => {
+    console.log('User leaving room:', roomName, 'username:', (socket as any).username);
     socket.leave(roomName);
     socket.to(roomName).emit('userLeft', (socket as any).username);
   });
 
   // Send message
   socket.on('sendMessage', (data: any) => {
-    const { room, message } = data;
-    io.to(room).emit('newMessage', { username: (socket as any).username, message, timestamp: new Date() });
+    const { room, message, username } = data;
+    console.log('Send message:', { username: username || (socket as any).username, room, message });
+
+    const finalUsername = username || (socket as any).username;
+    if (!finalUsername) {
+      console.error('No username available for message');
+      return;
+    }
+
+    io.to(room).emit('newMessage', { username: finalUsername, message, timestamp: new Date() });
     // Optionally save to DB
     const query = 'INSERT INTO messages (username, room, message, timestamp) VALUES (?, ?, ?, ?)';
-    db.query(query, [(socket as any).username, room, message, new Date()], (err: any) => {
-      if (err) console.error(err);
+    db.query(query, [finalUsername, room, message, new Date()], (err: any) => {
+      if (err) console.error('Database error saving message:', err);
     });
   });
 
