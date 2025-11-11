@@ -1,17 +1,18 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
-    background-color: #f5f5f5;
+    padding: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     background: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
 .hidden {
@@ -54,19 +55,24 @@ button:hover {
 }
 
 #messages {
-    height: 400px;
+    height: 500px;
     overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 1px solid #e1e5e9;
+    padding: 15px;
     margin: 20px 0;
-    background-color: #fafafa;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 8px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .message {
-    margin-bottom: 10px;
-    padding: 8px;
-    background: #e9ecef;
-    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    word-wrap: break-word;
 }
 
 .message .username {
@@ -77,23 +83,116 @@ button:hover {
 .message .timestamp {
     font-size: 0.8em;
     color: #666;
+    margin-top: 4px;
+}
+
+.message a {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.message a:hover {
+    text-decoration: underline;
 }
 
 #messageForm {
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-top: 15px;
 }
 
 #messageInput {
     flex: 1;
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+#messageInput:focus {
+    outline: none;
+    border-color: #007bff;
 }
 
 #fileInput {
     flex: 0 0 auto;
+    padding: 8px;
+    border: 2px solid #e1e5e9;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+#sendBtn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    padding: 12px 20px;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+#sendBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
 }
 
 #error {
     color: red;
     margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        margin: 5px;
+        padding: 15px;
+    }
+
+    #messages {
+        height: 350px;
+        padding: 10px;
+    }
+
+    #messageForm {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #messageInput {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    #sendBtn, .room-btn, #leaveBtn {
+        width: 100%;
+        margin: 2px 0;
+    }
+
+    #roomList {
+        text-align: center;
+    }
+
+    .room-btn {
+        display: block;
+        margin: 5px 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    #messages {
+        height: 250px;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
 }

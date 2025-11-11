@@ -54,6 +54,17 @@ sendBtn.addEventListener('click', () => {
     }
 });
 
+// Allow sending message with Enter key
+messageInput.addEventListener('keypress', (e: any) => {
+    if (e.key === 'Enter') {
+        const message = messageInput.value.trim();
+        if (message && currentRoom) {
+            socket.emit('sendMessage', { room: currentRoom, message });
+            messageInput.value = '';
+        }
+    }
+});
+
 // Send file
 fileInput.addEventListener('change', (e: any) => {
     const target = e.target as any;
@@ -120,14 +131,15 @@ socket.on('newMessage', (data: any) => {
     messageDiv.className = 'message';
 
     if (data.file) {
+        const link = data.file.filepath.startsWith('/uploads/') ? data.file.filepath : `/uploads/${data.file.filename}`;
         messageDiv.innerHTML = `
-            <span class="username">${data.username}</span> wysłał plik: 
-            <a href="${data.file.filepath}" target="_blank">${data.file.filename}</a>
+            <span class="username">${data.username}</span> wysłał plik:
+            <a href="${link}" target="_blank" download="${data.file.filename}">${data.file.filename}</a>
             <div class="timestamp">${new Date(data.timestamp).toLocaleString()}</div>
         `;
     } else {
         messageDiv.innerHTML = `
-            <span class="username">${data.username}:</span> ${data.message}
+            <span class="username">${data.username}:</span> ${data.message.replace(/\n/g, '<br>')}
             <div class="timestamp">${new Date(data.timestamp).toLocaleString()}</div>
         `;
     }

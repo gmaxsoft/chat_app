@@ -1,7 +1,7 @@
 {
   "name": "chat_online",
   "version": "1.0.0",
-  "description": "",
+  "description": "Chat Online",
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Maxsoft",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
