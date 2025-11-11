@@ -11,11 +11,16 @@ const loginError = document.getElementById('loginError') as any;
 const loginForm = document.getElementById('loginForm') as any;
 loginForm.addEventListener('submit', (e: any) => {
     e.preventDefault();
+    console.log('Form submitted, preventing default');
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
+    console.log('Login attempt:', username, password ? '[PASSWORD]' : '[EMPTY]');
 
     if (username && password) {
+        console.log('Emitting login event');
         socket.emit('login', { username, password });
+    } else {
+        console.log('Missing username or password');
     }
 });
 
@@ -127,12 +132,17 @@ leaveBtn.addEventListener('click', () => {
 });
 
 // Socket event listeners
-socket.on('loginSuccess', (_data: any) => {
+socket.on('loginSuccess', (data: any) => {
+    console.log('Login successful, switching to chat view', data);
+    console.log('loginDiv:', loginDiv);
+    console.log('chatDiv:', chatDiv);
     loginDiv.classList.add('hidden');
     chatDiv.classList.remove('hidden');
+    console.log('View switched successfully');
 });
 
 socket.on('loginError', (error: string) => {
+    console.log('Login error:', error);
     loginError.textContent = error;
 });
 

@@ -44,24 +44,35 @@ io.on('connection', (socket: any) => {
   // Simple login
   socket.on('login', (data: any) => {
     const { username, password } = data;
+    console.log('Login attempt for user:', username);
     // Authentication with password hashing
     const query = 'SELECT * FROM users WHERE username = ?';
     db.query(query, [username], async (err: any, results: any) => {
-      if (err) return socket.emit('loginError', 'Database error');
+      if (err) {
+        console.error('Database error:', err);
+        return socket.emit('loginError', 'Database error');
+      }
+      console.log('Database query results:', results.length, 'users found');
       if (results.length > 0) {
         const user = results[0];
+        console.log('Found user:', user.username, 'checking password...');
         try {
           const isValidPassword = await bcrypt.compare(password, user.password);
+          console.log('Password validation result:', isValidPassword);
           if (isValidPassword) {
             (socket as any).username = username;
+            console.log('Login successful for:', username);
             socket.emit('loginSuccess', { username });
           } else {
+            console.log('Invalid password for:', username);
             socket.emit('loginError', 'Invalid credentials');
           }
         } catch (hashErr) {
+          console.error('Hash error:', hashErr);
           socket.emit('loginError', 'Authentication error');
         }
       } else {
+        console.log('User not found:', username);
         socket.emit('loginError', 'Invalid credentials');
       }
     });
