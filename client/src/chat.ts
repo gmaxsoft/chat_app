@@ -4,7 +4,6 @@ const socket = io();
 let currentRoom: string | null = null;
 
 // Chat functionality
-const chatDiv = document.getElementById('chat') as any;
 const roomBtns = document.querySelectorAll('.room-btn') as any;
 const currentRoomDiv = document.getElementById('currentRoom') as any;
 const messagesDiv = document.getElementById('messages') as any;
