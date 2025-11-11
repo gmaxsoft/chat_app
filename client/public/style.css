@@ -96,28 +96,134 @@ button:hover {
     text-decoration: underline;
 }
 
-#messageForm {
+/* Image preview styles */
+.image-container {
+    position: relative;
+    display: inline-block;
+    max-width: 300px;
+    margin: 10px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.message-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.message-image:hover {
+    transform: scale(1.02);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
     display: flex;
-    gap: 10px;
     align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.download-btn {
+    background: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background: #0056b3;
+    color: white;
+    text-decoration: none;
+}
+
+.file-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.file-link:hover {
+    text-decoration: underline;
+}
+
+#messageForm {
     margin-top: 15px;
     width: 100%;
     box-sizing: border-box;
 }
 
-#messageInput {
+#editorToolbar {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 8px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 6px 6px 0 0;
+    border: 2px solid #e1e5e9;
+    border-bottom: none;
+}
+
+#editorToolbar button {
+    padding: 4px 8px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 30px;
+    transition: background-color 0.2s ease;
+}
+
+#editorToolbar button:hover {
+    background: #e9ecef;
+}
+
+#editorToolbar button:active {
+    background: #007bff;
+    color: white;
+}
+
+#messageEditor {
     flex: 1;
     padding: 12px;
     border: 2px solid #e1e5e9;
-    border-radius: 6px;
+    border-radius: 0 0 6px 6px;
     font-size: 16px;
+    min-height: 60px;
+    max-height: 120px;
+    overflow-y: auto;
     transition: border-color 0.3s ease;
-    min-width: 0; /* Zapobiega rozszerzaniu poza kontener */
+    outline: none;
+    font-family: inherit;
+    line-height: 1.4;
 }
 
-#messageInput:focus {
-    outline: none;
+#messageEditor:focus {
     border-color: #007bff;
+}
+
+#messageEditor:empty::before {
+    content: attr(placeholder);
+    color: #6c757d;
+    font-style: italic;
 }
 
 #fileInput {
@@ -167,8 +273,12 @@ button:hover {
         gap: 8px;
     }
 
-    #messageInput {
+    #messageEditor {
         font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    #editorToolbar {
+        flex-wrap: wrap;
     }
 
     #sendBtn, .room-btn, #leaveBtn {

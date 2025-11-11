@@ -24,7 +24,11 @@ const loginDiv = document.getElementById('login') as any;
 const roomBtns = document.querySelectorAll('.room-btn') as any;
 const currentRoomDiv = document.getElementById('currentRoom') as any;
 const messagesDiv = document.getElementById('messages') as any;
-const messageInput = document.getElementById('messageInput') as any;
+const messageEditor = document.getElementById('messageEditor') as any;
+const boldBtn = document.getElementById('boldBtn') as any;
+const italicBtn = document.getElementById('italicBtn') as any;
+const underlineBtn = document.getElementById('underlineBtn') as any;
+const clearBtn = document.getElementById('clearBtn') as any;
 const fileInput = document.getElementById('fileInput') as any;
 const sendBtn = document.getElementById('sendBtn') as any;
 const leaveBtn = document.getElementById('leaveBtn') as any;
@@ -45,22 +49,44 @@ roomBtns.forEach((btn: any) => {
     });
 });
 
+// Editor toolbar functionality
+boldBtn.addEventListener('click', () => {
+    document.execCommand('bold');
+    messageEditor.focus();
+});
+
+italicBtn.addEventListener('click', () => {
+    document.execCommand('italic');
+    messageEditor.focus();
+});
+
+underlineBtn.addEventListener('click', () => {
+    document.execCommand('underline');
+    messageEditor.focus();
+});
+
+clearBtn.addEventListener('click', () => {
+    document.execCommand('removeFormat');
+    messageEditor.innerHTML = '';
+    messageEditor.focus();
+});
+
 // Send message
 sendBtn.addEventListener('click', () => {
-    const message = messageInput.value.trim();
+    const message = messageEditor.innerHTML.trim();
     if (message && currentRoom) {
         socket.emit('sendMessage', { room: currentRoom, message });
-        messageInput.value = '';
+        messageEditor.innerHTML = '';
     }
 });
 
-// Allow sending message with Enter key
-messageInput.addEventListener('keypress', (e: any) => {
-    if (e.key === 'Enter') {
-        const message = messageInput.value.trim();
+// Allow sending message with Ctrl+Enter
+messageEditor.addEventListener('keydown', (e: any) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+        const message = messageEditor.innerHTML.trim();
         if (message && currentRoom) {
             socket.emit('sendMessage', { room: currentRoom, message });
-            messageInput.value = '';
+            messageEditor.innerHTML = '';
         }
     }
 });
@@ -132,14 +158,30 @@ socket.on('newMessage', (data: any) => {
 
     if (data.file) {
         const link = data.file.filepath.startsWith('/uploads/') ? data.file.filepath : `/uploads/${data.file.filename}`;
-        messageDiv.innerHTML = `
-            <span class="username">${data.username}</span> wysłał plik:
-            <a href="${link}" target="_blank" download="${data.file.filename}">${data.file.filename}</a>
-            <div class="timestamp">${new Date(data.timestamp).toLocaleString()}</div>
-        `;
+        const fileName = data.file.filename.toLowerCase();
+
+        // Check if it's an image file
+        if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') || fileName.endsWith('.png') || fileName.endsWith('.gif') || fileName.endsWith('.webp')) {
+            messageDiv.innerHTML = `
+                <span class="username">${data.username}</span> wysłał zdjęcie:
+                <div class="image-container">
+                    <img src="${link}" alt="${data.file.filename}" class="message-image" onclick="window.open('${link}', '_blank')">
+                    <div class="image-overlay">
+                        <a href="${link}" download="${data.file.filename}" class="download-btn">Pobierz</a>
+                    </div>
+                </div>
+                <div class="timestamp">${new Date(data.timestamp).toLocaleString()}</div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <span class="username">${data.username}</span> wysłał plik:
+                <a href="${link}" target="_blank" download="${data.file.filename}" class="file-link">${data.file.filename}</a>
+                <div class="timestamp">${new Date(data.timestamp).toLocaleString()}</div>
+            `;
+        }
     } else {
         messageDiv.innerHTML = `
-            <span class="username">${data.username}:</span> ${data.message.replace(/\n/g, '<br>')}
+            <span class="username">${data.username}:</span> <div class="message-content">${data.message.replace(/\n/g, '<br>')}</div>
             <div class="timestamp">${new Date(data.timestamp).toLocaleString()}</div>
         `;
     }

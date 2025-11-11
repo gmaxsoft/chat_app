@@ -26,7 +26,13 @@
             <div id="currentRoom"></div>
             <div id="messages"></div>
             <div id="messageForm">
-                <input type="text" id="messageInput" placeholder="Wpisz wiadomość..." required>
+                <div id="editorToolbar">
+                    <button type="button" id="boldBtn" title="Pogrubienie"><strong>B</strong></button>
+                    <button type="button" id="italicBtn" title="Kursywa"><em>I</em></button>
+                    <button type="button" id="underlineBtn" title="Podkreślenie"><u>U</u></button>
+                    <button type="button" id="clearBtn" title="Wyczyść formatowanie">⌫</button>
+                </div>
+                <div id="messageEditor" contenteditable="true" placeholder="Wpisz wiadomość..."></div>
                 <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.doc,.docx">
                 <button id="sendBtn">Wyślij</button>
             </div>
