@@ -34,6 +34,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
+
+// Middleware to check authentication for protected routes
+app.use('/chat.html', (_req: any, res: any, _next: any) => {
+  // For simplicity, we'll just redirect to login
+  // In a real app, you'd check JWT tokens or session cookies
+  console.log('Access to chat.html, redirecting to login');
+  res.redirect('/login.html');
+});
+
+// Root route redirect
+app.get('/', (_req: any, res: any) => {
+  console.log('Access to root, redirecting to login');
+  res.redirect('/login.html');
+});
+
 app.use(express.static(path.join(__dirname, '../../client/public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
