@@ -83,6 +83,7 @@ sendBtn.addEventListener('click', () => {
 // Allow sending message with Ctrl+Enter
 messageEditor.addEventListener('keydown', (e: any) => {
     if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault(); // Prevent default behavior
         const message = messageEditor.innerHTML.trim();
         if (message && currentRoom) {
             socket.emit('sendMessage', { room: currentRoom, message });

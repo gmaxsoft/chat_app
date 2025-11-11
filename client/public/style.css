@@ -190,6 +190,7 @@ button:hover {
     font-size: 14px;
     min-width: 30px;
     transition: background-color 0.2s ease;
+    color: #333;
 }
 
 #editorToolbar button:hover {
