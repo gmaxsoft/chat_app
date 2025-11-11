@@ -27,7 +27,10 @@ socket.on('loginSuccess', (data: any) => {
     console.log('Login successful, redirecting to chat', data);
     // Store username in localStorage for session persistence
     localStorage.setItem('chat_username', data.username);
-    window.location.href = '/chat.html';
+    // Add a small delay to ensure cookie is set
+    setTimeout(() => {
+        window.location.href = '/chat.html';
+    }, 100);
 });
 
 socket.on('loginError', (error: string) => {

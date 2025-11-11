@@ -90,7 +90,13 @@ io.on('connection', (socket: any) => {
             // In a real app, you'd use secure session management
             const response = socket.request.res;
             if (response) {
-              response.setHeader('Set-Cookie', 'chat_session=authenticated; Path=/; HttpOnly');
+              response.setHeader('Set-Cookie', [
+                'chat_session=authenticated',
+                'Path=/',
+                'HttpOnly',
+                'SameSite=Lax'
+              ].join('; '));
+              console.log('Authentication cookie set');
             }
           } else {
             console.log('Invalid password for:', username);
