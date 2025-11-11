@@ -21,6 +21,8 @@ loginForm.addEventListener('submit', (e) => {
 // Socket event listeners
 socket.on('loginSuccess', (data) => {
     console.log('Login successful, redirecting to chat', data);
+    // Store username in localStorage for session persistence
+    localStorage.setItem('chat_username', data.username);
     window.location.href = '/chat.html';
 });
 socket.on('loginError', (error) => {

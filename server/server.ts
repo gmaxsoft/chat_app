@@ -62,7 +62,7 @@ io.on('connection', (socket: any) => {
           if (isValidPassword) {
             (socket as any).username = username;
             console.log('Login successful for:', username);
-            socket.emit('loginSuccess', { username });
+            socket.emit('loginSuccess', { username, redirect: '/chat.html' });
           } else {
             console.log('Invalid password for:', username);
             socket.emit('loginError', 'Invalid credentials');

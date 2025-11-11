@@ -1,7 +1,13 @@
+// Get username from URL parameters or localStorage
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get('user') || localStorage.getItem('chat_username');
+if (!username) {
+    // Redirect to login if no username
+    window.location.href = '/login.html';
+}
 const socket = io();
 let currentRoom = null;
 // Chat functionality
-const chatDiv = document.getElementById('chat');
 const roomBtns = document.querySelectorAll('.room-btn');
 const currentRoomDiv = document.getElementById('currentRoom');
 const messagesDiv = document.getElementById('messages');
@@ -49,8 +55,12 @@ clearBtn.addEventListener('click', () => {
 // Send message
 sendBtn.addEventListener('click', () => {
     const message = messageEditor.innerHTML.trim();
-    if (message && currentRoom) {
-        socket.emit('sendMessage', { room: currentRoom, message });
+    if (!currentRoom) {
+        alert('Wybierz pokój przed wysłaniem wiadomości!');
+        return;
+    }
+    if (message) {
+        socket.emit('sendMessage', { room: currentRoom, message, username });
         messageEditor.innerHTML = '';
     }
 });
@@ -59,8 +69,12 @@ messageEditor.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') {
         e.preventDefault(); // Prevent default behavior
         const message = messageEditor.innerHTML.trim();
-        if (message && currentRoom) {
-            socket.emit('sendMessage', { room: currentRoom, message });
+        if (!currentRoom) {
+            alert('Wybierz pokój przed wysłaniem wiadomości!');
+            return;
+        }
+        if (message) {
+            socket.emit('sendMessage', { room: currentRoom, message, username });
             messageEditor.innerHTML = '';
         }
     }
@@ -70,7 +84,12 @@ fileInput.addEventListener('change', (e) => {
     var _a;
     const target = e.target;
     const file = (_a = target.files) === null || _a === void 0 ? void 0 : _a[0];
-    if (file && currentRoom) {
+    if (!currentRoom) {
+        alert('Wybierz pokój przed wysłaniem pliku!');
+        target.value = '';
+        return;
+    }
+    if (file) {
         const formData = new FormData();
         formData.append('file', file);
         fetch('/upload', {
@@ -79,7 +98,7 @@ fileInput.addEventListener('change', (e) => {
         })
             .then(response => response.json())
             .then(data => {
-            socket.emit('sendMessage', { room: currentRoom, message: `[Plik: ${file.name}]`, file: data });
+            socket.emit('sendMessage', { room: currentRoom, message: `[Plik: ${file.name}]`, file: data, username });
             target.value = '';
         })
             .catch(error => {

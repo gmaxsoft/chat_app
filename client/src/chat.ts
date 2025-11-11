@@ -1,4 +1,14 @@
 declare const io: any;
+
+// Get username from URL parameters or localStorage
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get('user') || localStorage.getItem('chat_username');
+
+if (!username) {
+    // Redirect to login if no username
+    window.location.href = '/login.html';
+}
+
 const socket = io();
 
 let currentRoom: string | null = null;
@@ -57,8 +67,12 @@ clearBtn.addEventListener('click', () => {
 // Send message
 sendBtn.addEventListener('click', () => {
     const message = messageEditor.innerHTML.trim();
-    if (message && currentRoom) {
-        socket.emit('sendMessage', { room: currentRoom, message });
+    if (!currentRoom) {
+        alert('Wybierz pokój przed wysłaniem wiadomości!');
+        return;
+    }
+    if (message) {
+        socket.emit('sendMessage', { room: currentRoom, message, username });
         messageEditor.innerHTML = '';
     }
 });
@@ -68,8 +82,12 @@ messageEditor.addEventListener('keydown', (e: any) => {
     if (e.ctrlKey && e.key === 'Enter') {
         e.preventDefault(); // Prevent default behavior
         const message = messageEditor.innerHTML.trim();
-        if (message && currentRoom) {
-            socket.emit('sendMessage', { room: currentRoom, message });
+        if (!currentRoom) {
+            alert('Wybierz pokój przed wysłaniem wiadomości!');
+            return;
+        }
+        if (message) {
+            socket.emit('sendMessage', { room: currentRoom, message, username });
             messageEditor.innerHTML = '';
         }
     }
@@ -79,7 +97,12 @@ messageEditor.addEventListener('keydown', (e: any) => {
 fileInput.addEventListener('change', (e: any) => {
     const target = e.target as any;
     const file = target.files?.[0];
-    if (file && currentRoom) {
+    if (!currentRoom) {
+        alert('Wybierz pokój przed wysłaniem pliku!');
+        target.value = '';
+        return;
+    }
+    if (file) {
         const formData = new FormData();
         formData.append('file', file);
 
@@ -89,7 +112,7 @@ fileInput.addEventListener('change', (e: any) => {
         })
         .then(response => response.json())
         .then(data => {
-            socket.emit('sendMessage', { room: currentRoom, message: `[Plik: ${file.name}]`, file: data });
+            socket.emit('sendMessage', { room: currentRoom, message: `[Plik: ${file.name}]`, file: data, username });
             target.value = '';
         })
         .catch(error => {
